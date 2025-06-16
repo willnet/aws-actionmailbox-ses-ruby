@@ -16,7 +16,12 @@ module Aws
         end
 
         def verified?
-          SNSMessageVerifier.verifier.authentic?(@request_body)
+          result = SNSMessageVerifier.verifier.authentic?(@request_body)
+          unless result
+            Rails.logger.warn('SNS message verification failed!!!!!')
+            Rails.logger.warn("Request body: #{@request_body}")
+          end
+          result
         end
 
         def topic
